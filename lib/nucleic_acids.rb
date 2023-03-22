@@ -6,6 +6,15 @@ module NucleicAcids
     def rna_transcription
       NucleicAcids.rna(sequence.gsub('T', 'U'))
     end
+
+    # Reverse the sequence and take the complement of each nucleotide
+    # A <=> T
+    # C <=> G
+    # Given the sequence of DNA in one strand of the double helix, this will
+    # tell you the other one that it is bonded to.
+    def reverse_complement
+      NucleicAcids.dna(sequence.reverse.tr('ACGT', 'TGCA'))
+    end
   end
 
   RNA = Data.define(:sequence)
