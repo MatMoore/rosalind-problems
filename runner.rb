@@ -39,6 +39,7 @@ solution_modules = [
   Solutions::Fib,
   Solutions::Gc,
   Solutions::Hamm,
+  Solutions::Iprb
 ]
 
 if problem_id
