@@ -47,40 +47,71 @@ end
 
 last_index = solution_modules.size - 1
 
-solution_modules.each_with_index do |m, i|
-  name = m.name.sub('Solutions::', '')
-  lowercase = name.downcase
+class SolutionRunner
+  def initialize(m)
+    @m = m
+    @name = m.name.sub('Solutions::', '')
+    @id = name.downcase
+  end
 
-  if options[:overwrite]
+  attr_reader :id
+  attr_reader :name
+
+  def overwrite_input
     download_path = Pathname.new(ENV['HOME']) + 'Downloads'
-    download_path.glob("rosalind_#{lowercase}.txt").each do |pathname|
+    download_path.glob("rosalind_#{id}.txt").each do |pathname|
       new_filename = pathname.basename.sub('rosalind_', '')
       new_path = Pathname.new('inputs') + new_filename
       FileUtils.cp(pathname, new_path)
     end
   end
 
-  test_input = File.read("inputs/#{lowercase}.txt").chomp
+  def original_output
+    @original ||= File.read(output_path)
+  rescue Errno::ENOENT
+  end
 
-  output_path = "outputs/#{lowercase}.txt"
+  def run
+    output = m.solution(load_test_input).to_s + "\n"
 
-  original_output = nil
-
-  unless options[:force]
-    begin
-      original_output = File.read(output_path)
-    rescue Errno::ENOENT
+    if original_output.nil?
+      File.write(output_path, output)
+      [:new, output]
+    elsif original_output != output
+      [:changed, output]
+    else
+      [:unchanged, output]
     end
   end
 
-  output = m.solution(test_input).to_s + "\n"
+  private
 
-  if original_output.nil?
-    File.write(output_path, output)
-  elsif original_output != output
-    puts "#{name} FAILED"
+  attr_reader :m
+
+  def load_test_input
+    File.read("inputs/#{id}.txt").chomp
+  end
+
+  def output_path
+    "outputs/#{id}.txt"
+  end
+end
+
+solution_modules.each_with_index do |m, i|
+  solution_runner = SolutionRunner.new(m)
+
+  if options[:overwrite]
+    solution_runner.overwrite_input
+  end
+
+  original_output = options[:force] ? nil : solution_runner.original_output
+
+  result, output = solution_runner.run
+  case result
+  when :failed
+    puts "#{solution_runner.name} FAILED"
   else
-    puts name unless problem_id
+    puts solution_runner.name unless problem_id
   end
 
   puts output
