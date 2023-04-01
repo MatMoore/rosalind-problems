@@ -15,6 +15,11 @@ module NucleicAcids
     def reverse_complement
       NucleicAcids.dna(sequence.reverse.tr('ACGT', 'TGCA'))
     end
+
+    def gc_content
+      gc_count = sequence.chars.filter { |char| char == "G" || char == "C" }.count
+      (gc_count * 100).fdiv(sequence.size)
+    end
   end
 
   RNA = Data.define(:sequence)
