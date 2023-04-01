@@ -1,5 +1,7 @@
 require 'zeitwerk'
 require 'optionparser'
+require 'pathname'
+require 'fileutils'
 
 module Solutions
 end
@@ -17,6 +19,14 @@ OptionParser.new do |opts|
   opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
+  end
+
+  opts.on("-f", "--force", "Overwrite any existing output") do
+    options[:force] = true
+  end
+
+  opts.on("-o", "--overwrite-input", "Override input with downloaded files") do
+    options[:overwrite] = true
   end
 end.parse!
 
@@ -41,14 +51,26 @@ solution_modules.each_with_index do |m, i|
   name = m.name.sub('Solutions::', '')
   lowercase = name.downcase
 
+  if options[:overwrite]
+    download_path = Pathname.new(ENV['HOME']) + 'Downloads'
+    download_path.glob("rosalind_#{lowercase}.txt").each do |pathname|
+      new_filename = pathname.basename.sub('rosalind_', '')
+      new_path = Pathname.new('inputs') + new_filename
+      FileUtils.cp(pathname, new_path)
+    end
+  end
+
   test_input = File.read("inputs/#{lowercase}.txt").chomp
 
   output_path = "outputs/#{lowercase}.txt"
 
-  begin
-    original_output = File.read(output_path)
-  rescue Errno::ENOENT
-    original_output = nil
+  original_output = nil
+
+  unless options[:force]
+    begin
+      original_output = File.read(output_path)
+    rescue Errno::ENOENT
+    end
   end
 
   output = m.solution(test_input).to_s + "\n"
