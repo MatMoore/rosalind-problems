@@ -16,6 +16,7 @@ module NucleicAcids
       NucleicAcids.dna(sequence.reverse.tr('ACGT', 'TGCA'))
     end
 
+    # GC content is the percentage of the nucleotides that are either G or C.
     def gc_content
       gc_count = sequence.chars.filter { |char| char == "G" || char == "C" }.count
       (gc_count * 100).fdiv(sequence.size)
