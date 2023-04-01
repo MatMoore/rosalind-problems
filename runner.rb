@@ -1,4 +1,5 @@
 require 'zeitwerk'
+require 'optionparser'
 
 module Solutions
 end
@@ -9,6 +10,18 @@ loader.push_dir('./solutions', namespace: Solutions)
 loader.setup
 loader.eager_load
 
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: runner.rb [options] [PROBLEM_ID]"
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+problem_id = ARGV.first
+
 solution_modules = [
   Solutions::Dna,
   Solutions::Rna,
@@ -16,6 +29,10 @@ solution_modules = [
   Solutions::Fib,
   Solutions::Gc
 ]
+
+if problem_id
+  solution_modules = solution_modules.filter { |m| m.name.downcase == "solutions::#{problem_id}" }
+end
 
 last_index = solution_modules.size - 1
 
@@ -40,7 +57,7 @@ solution_modules.each_with_index do |m, i|
   elsif original_output != output
     puts "#{name} FAILED"
   else
-    puts name
+    puts name unless problem_id
   end
 
   puts output
