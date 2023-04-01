@@ -27,7 +27,8 @@ solution_modules = [
   Solutions::Rna,
   Solutions::Revc,
   Solutions::Fib,
-  Solutions::Gc
+  Solutions::Gc,
+  Solutions::Hamm,
 ]
 
 if problem_id

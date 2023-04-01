@@ -1,5 +1,13 @@
 module NucleicAcids
+  module StringFunctions
+    def hamming_distance(other)
+      sequence.chars.zip(other.sequence.chars).count { |a, b| a != b }
+    end
+  end
+
   DNA = Data.define(:sequence) do
+    include StringFunctions
+
     # RNA transcription takes a strand of DNA and uses it
     # as a template to create a messanger RNA (mRNA).
     # Uracil is used instead of Thymine.
@@ -23,7 +31,9 @@ module NucleicAcids
     end
   end
 
-  RNA = Data.define(:sequence)
+  RNA = Data.define(:sequence) do
+    include StringFunctions
+  end
 
   class InvalidNucleotide < StandardError
   end
