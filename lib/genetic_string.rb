@@ -35,7 +35,14 @@ module GeneticString
     include StringFunctions
   end
 
+  ProteinString = Data.define(:sequence) do
+    include StringFunctions
+  end
+
   class InvalidNucleotide < StandardError
+  end
+
+  class InvalidAminoAcid < StandardError
   end
 
   private_constant :DNA
@@ -51,5 +58,11 @@ module GeneticString
     throw InvalidNucleotide unless sequence =~ /^[ACGU]+$/
 
     RNA.new(sequence)
+  end
+
+  def self.protein_string(sequence)
+    throw InvalidAminoAcid unless sequence =~ /^[ACDEFGHIKLMNPQRSTVWY]+$/
+
+    ProteinString.new(sequence)
   end
 end
