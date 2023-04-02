@@ -2,7 +2,7 @@ module Solutions
   module Gc
     Fasta = Data.define(:id, :sequence) do
       def to_dna
-        NucleicAcids.dna(sequence)
+        GeneticString.dna(sequence)
       end
 
       def self.parse(fasta_text)

@@ -22,6 +22,6 @@ This works great for exercises like this, since my definition of working code is
 
 ### Data classes
 
-Ruby 3.2 added a new data class for defining immutable value objects. I use it in the `NucleicAcids` module for modelling DNA and RNA.
+Ruby 3.2 added a new data class for defining immutable value objects. I use it in the `GeneticString` module for modelling DNA and RNA.
 
 I made the classes themselves private and provided factory methods to make sure sequences are valid when constructing these values.

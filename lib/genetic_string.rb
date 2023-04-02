@@ -1,4 +1,4 @@
-module NucleicAcids
+module GeneticString
   module StringFunctions
     def hamming_distance(other)
       sequence.chars.zip(other.sequence.chars).count { |a, b| a != b }
@@ -12,7 +12,7 @@ module NucleicAcids
     # as a template to create a messanger RNA (mRNA).
     # Uracil is used instead of Thymine.
     def rna_transcription
-      NucleicAcids.rna(sequence.gsub('T', 'U'))
+      GeneticString.rna(sequence.gsub('T', 'U'))
     end
 
     # Reverse the sequence and take the complement of each nucleotide
@@ -21,7 +21,7 @@ module NucleicAcids
     # Given the sequence of DNA in one strand of the double helix, this will
     # tell you the other one that it is bonded to.
     def reverse_complement
-      NucleicAcids.dna(sequence.reverse.tr('ACGT', 'TGCA'))
+      GeneticString.dna(sequence.reverse.tr('ACGT', 'TGCA'))
     end
 
     # GC content is the percentage of the nucleotides that are either G or C.
