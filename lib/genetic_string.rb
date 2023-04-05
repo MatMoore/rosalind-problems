@@ -3,6 +3,17 @@ module GeneticString
     def hamming_distance(other)
       sequence.chars.zip(other.sequence.chars).count { |a, b| a != b }
     end
+
+    def find_motif(motif)
+      matches = []
+
+      (0..sequence.size).each do |index|
+        window = sequence[index, motif.length]
+        matches << index if window == motif
+      end
+
+      matches.map { |i| i + 1 }
+    end
   end
 
   DNA = Data.define(:sequence) do

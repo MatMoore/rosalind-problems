@@ -41,6 +41,7 @@ solution_modules = [
   Solutions::Hamm,
   Solutions::Iprb,
   Solutions::Prot,
+  Solutions::Subs,
 ]
 
 if problem_id
