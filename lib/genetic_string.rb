@@ -1,3 +1,5 @@
+# A genetic string represents a chain of molecules
+# taken from some fixed "alphabet", e.g. AGCT in the case of DNA.
 module GeneticString
   module StringFunctions
     def hamming_distance(other)

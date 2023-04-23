@@ -1,5 +1,5 @@
 # A profile matrix stores the number of times a nucleotide
-# occurs in a given position across a set of gentic strings.
+# occurs in a given position across a set of genetic strings.
 #
 # For example:
 # A   5 1 0 0 5 5 0 0
