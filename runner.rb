@@ -43,6 +43,7 @@ solution_modules = [
   Solutions::Prot,
   Solutions::Subs,
   Solutions::Cons,
+  Solutions::Fibd,
 ]
 
 if problem_id
@@ -75,10 +76,10 @@ class SolutionRunner
   rescue Errno::ENOENT
   end
 
-  def run
+  def run(force:)
     output = m.solution(load_test_input).to_s + "\n"
 
-    if original_output.nil?
+    if force
       File.write(output_path, output)
       [:new, output]
     elsif original_output != output
@@ -108,12 +109,16 @@ solution_modules.each_with_index do |m, i|
     solution_runner.overwrite_input
   end
 
-  original_output = options[:force] ? nil : solution_runner.original_output
-
-  result, output = solution_runner.run
+  result, output = solution_runner.run(force: options[:force])
   case result
-  when :failed
+  when :changed
     puts "#{solution_runner.name} FAILED"
+    puts "Expected:"
+    puts solution_runner.original_output
+    puts "--------------------"
+    puts "Actual:"
+    puts output
+    exit 1
   else
     puts solution_runner.name unless problem_id
   end
