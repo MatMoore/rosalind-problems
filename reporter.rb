@@ -38,3 +38,20 @@ class VerboseReporter
     end
   end
 end
+
+
+class ConciseReporter < VerboseReporter
+  def report_success(_name, _output)
+    @num_passed += 1
+    print "."
+  end
+
+  def report_summary
+    if @num_failed == 0
+      puts ""
+    else
+      puts ""
+      puts "#{@num_failed} of #{@num_passed + @num_failed} failed."
+    end
+  end
+end

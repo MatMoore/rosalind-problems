@@ -103,7 +103,11 @@ class SolutionRunner
   end
 end
 
-reporter = VerboseReporter.new(running_single_test: !problem_id.nil?)
+if problem_id.nil?
+  reporter = ConciseReporter.new(running_single_test: false)
+else
+  reporter = VerboseReporter.new(running_single_test: true)
+end
 
 solution_modules.each do |m|
   solution_runner = SolutionRunner.new(m)
@@ -120,6 +124,7 @@ solution_modules.each do |m|
       solution_runner.original_output,
       output
     )
+    reporter.report_summary
     exit 1
   else
     reporter.report_success(solution_runner.name, output)
