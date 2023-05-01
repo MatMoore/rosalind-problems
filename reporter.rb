@@ -30,11 +30,13 @@ class VerboseReporter
   end
 
   def report_summary
+    return if @running_single_test
+
     puts "--------------------"
     if @num_failed == 0
       puts "OK"
     else
-      puts "#{@num_failed} of #{@num_passed} failed."
+      puts "#{@num_failed} of #{@num_passed + @num_failed} failed."
     end
   end
 end
