@@ -5,7 +5,6 @@ module Solutions::Cons
       profile_matrix.add_string(fasta.to_dna)
     end
 
-    puts profile_matrix.consensus.join
-    puts profile_matrix.to_s
+    return profile_matrix.consensus.join + "\n" + profile_matrix.to_s
   end
 end

@@ -2,6 +2,7 @@ require 'zeitwerk'
 require 'optionparser'
 require 'pathname'
 require 'fileutils'
+require_relative 'reporter'
 
 module Solutions
 end
@@ -102,7 +103,9 @@ class SolutionRunner
   end
 end
 
-solution_modules.each_with_index do |m, i|
+reporter = VerboseReporter.new(running_single_test: !problem_id.nil?)
+
+solution_modules.each do |m|
   solution_runner = SolutionRunner.new(m)
 
   if options[:overwrite]
@@ -112,17 +115,15 @@ solution_modules.each_with_index do |m, i|
   result, output = solution_runner.run(force: options[:force])
   case result
   when :changed
-    puts "#{solution_runner.name} FAILED"
-    puts "Expected:"
-    puts solution_runner.original_output
-    puts "--------------------"
-    puts "Actual:"
-    puts output
+    reporter.report_fail(
+      solution_runner.name,
+      solution_runner.original_output,
+      output
+    )
     exit 1
   else
-    puts solution_runner.name unless problem_id
+    reporter.report_success(solution_runner.name, output)
   end
-
-  puts output
-  puts "" if i != last_index
 end
+
+reporter.report_summary
