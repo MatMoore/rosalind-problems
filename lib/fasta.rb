@@ -19,7 +19,7 @@ Fasta = Data.define(:id, :sequence) do
     Enumerator.new do |y|
       fasta_text.split('>').each do |fasta_entry|
         lines = fasta_entry.lines(chomp: true)
-        id = lines[0]
+        id = lines[0]&.strip
         next if id == "" || id.nil?
 
         sequence = lines[1..].join

@@ -45,10 +45,15 @@ solution_modules = [
   Solutions::Subs,
   Solutions::Cons,
   Solutions::Fibd,
+  Solutions::Grph,
 ]
 
 if problem_id
   solution_modules = solution_modules.filter { |m| m.name.downcase == "solutions::#{problem_id}" }
+  if solution_modules.empty?
+    $stderr.puts "Unknown problem"
+    exit 1
+  end
 end
 
 last_index = solution_modules.size - 1
@@ -80,7 +85,7 @@ class SolutionRunner
   def run(force:)
     output = m.solution(load_test_input).to_s + "\n"
 
-    if force
+    if force || original_output.nil?
       File.write(output_path, output)
       [:new, output]
     elsif original_output != output
