@@ -33,20 +33,7 @@ end.parse!
 
 problem_id = ARGV.first
 
-solution_modules = [
-  Solutions::Dna,
-  Solutions::Rna,
-  Solutions::Revc,
-  Solutions::Fib,
-  Solutions::Gc,
-  Solutions::Hamm,
-  Solutions::Iprb,
-  Solutions::Prot,
-  Solutions::Subs,
-  Solutions::Cons,
-  Solutions::Fibd,
-  Solutions::Grph,
-]
+solution_modules = Solutions.constants.map { |c| Solutions.const_get(c) }
 
 if problem_id
   solution_modules = solution_modules.filter { |m| m.name.downcase == "solutions::#{problem_id}" }
